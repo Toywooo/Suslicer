@@ -8,12 +8,12 @@ map<int, vector<vector<float> > > Slicing(Trimesh& m, std::vector<float>& P)
 {
 	vector<vector<float> >temp;
 	vector<vector<float>> s;
-	ofstream myout("C:/Users/wuhua/Desktop/suslicer/Ò»¸öÆæÆæ¹Ö¹ÖµÄÆ¤¿¨Çğ.txt");
+	ofstream myout("C:/Users/wuhua/Desktop/suslicer/ä¸€ä¸ªå¥‡å¥‡æ€ªæ€ªçš„çš®å¡ä¸˜.txt");
 	
-	////ÊäÈëÎªÈı½ÇĞÎÁĞ±íT£¨ÒÑ°´zminÅÅĞò£©£¬Æ½ÃæÁĞ±íP£¬²ãºñ¶È£¬²¼¶û²ÎÊısrt
-    //Ğèµ÷ÓÃBUILD-TRIANGLE-LISTSº¯Êı
-	//¹¹½¨ÓĞĞ§¼¯ºÏA£¬²¢µ÷ÓÃCOMPUTE-INTERSECTIONº¯Êı
-	//Êä³öÎªÍê³É·Ö×éµÄÈı½ÇĞÎÁĞ±íS£¬°´zmin¼°²ãµÄz×ø±ê·Ö×é
+	////è¾“å…¥ä¸ºä¸‰è§’å½¢åˆ—è¡¨Tï¼ˆå·²æŒ‰zminæ’åºï¼‰ï¼Œå¹³é¢åˆ—è¡¨Pï¼Œå±‚åšåº¦ï¼Œå¸ƒå°”å‚æ•°srt
+    //éœ€è°ƒç”¨BUILD-TRIANGLE-LISTSå‡½æ•°
+	//æ„å»ºæœ‰æ•ˆé›†åˆAï¼Œå¹¶è°ƒç”¨COMPUTE-INTERSECTIONå‡½æ•°
+	//è¾“å‡ºä¸ºå®Œæˆåˆ†ç»„çš„ä¸‰è§’å½¢åˆ—è¡¨Sï¼ŒæŒ‰zminåŠå±‚çš„zåæ ‡åˆ†ç»„
 	map<int, vector<vector<float> > > segs;
 	map<int, vector<unsigned int> > fgroup = Build_triangle_list(P, m);
 	vector<unsigned int> A;
@@ -45,7 +45,7 @@ map<int, vector<vector<float> > > Slicing(Trimesh& m, std::vector<float>& P)
 		////////////////////////////////////////////////////////////////////////////////
 		/*for (vector<vector<float>>::iterator it = S.begin(); it != S.end(); it++)
 		{
-			//(*it)¡ª¡ªÈİÆ÷vector<int>
+			//(*it)â€”â€”å®¹å™¨vector<int>
 			for (vector<float>::iterator vit = (*it).begin(); vit != (*it).end(); vit++)
 			{
 				printf("%f\t", *vit);
@@ -88,7 +88,7 @@ std::map<int, vector<unsigned int> > Build_triangle_list(std::vector<float>& P, 
 	return face_group_by_layer;
 };
 
-//¶ÔÓÚÒ»¸öÈı½ÇĞÎ×ö¶ş·Ö²éÕÒ²Ù×÷
+//å¯¹äºä¸€ä¸ªä¸‰è§’å½¢åšäºŒåˆ†æŸ¥æ‰¾æ“ä½œ
 int binary_searching(vector<float>& P, unsigned int fi, Trimesh& m)
 {
 	float min_zx = m.get_f_minzx(fi);
@@ -99,7 +99,7 @@ int binary_searching(vector<float>& P, unsigned int fi, Trimesh& m)
 	int high = k - 1;
 	while ((high - low) > 1)
 	{
-		int m = (high + low) / 2;//mÎªintĞÍ£¬¶ÔÊıÖµÏòÏÂÈ¡Õû
+		int m = (high + low) / 2;//mä¸ºintå‹ï¼Œå¯¹æ•°å€¼å‘ä¸‹å–æ•´
 		if (min_zx > P[m])
 			low = m;
 		else
@@ -162,7 +162,7 @@ std::vector<float> ComputeIntersection(unsigned int fi, float plane, Trimesh& m)
 				* (downVerts[j][1] - upperVerts[i][1]) + upperVerts[i][1];
 			seg[k * 3 + 2] = plane;
 			k++;
-			//°ÑvectorÀïµÄvectorµÄÄÚÈİÈ¡³ö£¬·Åµ½seg[0][1][2]ÖĞ 
+			//æŠŠvectoré‡Œçš„vectorçš„å†…å®¹å–å‡ºï¼Œæ”¾åˆ°seg[0][1][2]ä¸­ 
 			//compute intersection point on upperVerts[i]-downVerts[j] 
 			//seg[k*3] = ?
 			//seg[k*3+1] = ?
@@ -170,7 +170,7 @@ std::vector<float> ComputeIntersection(unsigned int fi, float plane, Trimesh& m)
 		}
 		/////////////k++;
 	}
-	return seg;//segÖĞÖ»´æ·ÅÁ½¸öµãµÄ×ø±ê£¬Ã¿´Îµ÷ÓÃ·µ»ØµÄ¶¼ÊÇÒ»ÌõÏß¶ÎµÄÁ½¸ö¶Ëµã
+	return seg;//segä¸­åªå­˜æ”¾ä¸¤ä¸ªç‚¹çš„åæ ‡ï¼Œæ¯æ¬¡è°ƒç”¨è¿”å›çš„éƒ½æ˜¯ä¸€æ¡çº¿æ®µçš„ä¸¤ä¸ªç«¯ç‚¹
 }
 
 
@@ -196,10 +196,6 @@ contour_construction(int q, vector<vector<float> >S)
 		mymap1.clear();
 		mymap2.clear();
 	}
-	///////////////////////////////////////////////////////////////////////////
-	//hashmap1.erase(hashmap1.begin());ÑªÁÜÁÜµÄ½ÌÑµ
-	//hashmap2.erase(hashmap2.begin());
-	///////////////////////////////////////////////////////////////////////////
 
 	mymap1.push_back(S[0][0]);
 	mymap1.push_back(S[0][1]);
@@ -215,18 +211,15 @@ contour_construction(int q, vector<vector<float> >S)
 		multimap<vector<float>, vector<float>>::iterator vit1 = hashmap1.find(mymap2);
 		multimap<vector<float>, vector<float>>::iterator vit2 = hashmap2.find(mymap2);
 		
-		if (vit1 != hashmap1.end())//Ã»ÓĞÓÃĞÂµÄmymap2Ñ­»·²éÕÒ
+		if (vit1 != hashmap1.end())
 		{
 			int count2=0;
 			mymap1 = (*vit1).first;
 			mymap2.clear();
-			//hashmap1.erase(it);½«it´Óhashmap1ÖĞÉ¾³ı£¬ÔòºóĞø²»ÄÜµ÷ÓÃit
-			//mymap2 = (*vit1).second;
 			mymap2.push_back((*vit1).second[0]);
 			mymap2.push_back((*vit1).second[1]);
 			mymap2.push_back((*vit1).second[2]);
 			hashmap1.erase(vit1);
-			//hashmap2.erase(mymap2);
 			Temp.push_back(mymap2);
 
 			pair<multimap<vector<float>, vector<float>>::iterator,
@@ -255,12 +248,12 @@ contour_construction(int q, vector<vector<float> >S)
 			}
 		}
 		
-		else if (vit2 != hashmap2.end())//Ã»ÓĞÓÃĞÂµÄmymap2Ñ­»·²éÕÒ
+		else if (vit2 != hashmap2.end())//æ²¡æœ‰ç”¨æ–°çš„mymap2å¾ªç¯æŸ¥æ‰¾
 		{
 			int count1=0;
 			mymap1 = mymap2;
 			mymap2.clear();
-			//hashmap1.erase(it);½«it´Óhashmap1ÖĞÉ¾³ı£¬ÔòºóĞø²»ÄÜµ÷ÓÃit
+			//hashmap1.erase(it);å°†itä»hashmap1ä¸­åˆ é™¤ï¼Œåˆ™åç»­ä¸èƒ½è°ƒç”¨it
 			mymap2.push_back((*vit2).second[0]);
 			mymap2.push_back((*vit2).second[1]);
 			mymap2.push_back((*vit2).second[2]);
@@ -312,162 +305,9 @@ contour_construction(int q, vector<vector<float> >S)
 		}
 	}
 	
-	/*for (vector<vector<float>>::iterator it = Temp.begin(); it != Temp.end(); it++)
-	{
-		//(*it)¡ª¡ªÈİÆ÷vector<int>
-		for (vector<float>::iterator vit = (*it).begin(); vit != (*it).end(); vit++)
-		{
-			printf("%f\t", *vit);
-		}
-		cout << endl;
-	}*/
 	return Temp;
-	//contours.insert(pair<int, vector<vector<float>>>(q, Temp));
-	//Êä³ö¹şÏ£±íµÄ¼üÖµºÍÖµ
-	/*for (map<vector<float>,vector<float>>::iterator it = hashmap1.begin(); 
-		it != hashmap1.end(); it++)
-	{
-		cout << (*it).first[0] <<"  " <<(*it).first[1] << "  " << (*it).first[2]<<"     "
-			<< (*it).second [0] << "  " << (*it).second[1] << "  " << (*it).second[2] << endl;
-	}
-	cout << endl;*/
-	
+
 }
 
-
-
-multimap<int, vector<vector<float>>>
-contour_construction1(int q, vector<vector<float> >S)
-{
-	int q = 0;
-	multimap<int, vector<vector<float>>> contours;
-	multimap<vector<float>, vector<float>> hashmap1, hashmap2;
-	vector<float> mymap1, mymap2, mymap;
-	vector < vector<float> >Temp;
-
-	for (int i = 1; i < S.size(); i++)
-	{
-		mymap1.push_back(S[i][0]);
-		mymap1.push_back(S[i][1]);
-		mymap1.push_back(S[i][2]);
-		mymap2.push_back(S[i][3]);
-		mymap2.push_back(S[i][4]);
-		mymap2.push_back(S[i][5]);
-
-		hashmap1.insert(pair < vector<float>, vector<float>>(mymap1, mymap2));
-		hashmap2.insert(pair < vector<float>, vector<float>>(mymap2, mymap1));
-		mymap1.clear();
-		mymap2.clear();
-	}
-	
-	mymap1.push_back(S[0][0]);
-	mymap1.push_back(S[0][1]);
-	mymap1.push_back(S[0][2]);
-	mymap2.push_back(S[0][3]);
-	mymap2.push_back(S[0][4]);
-	mymap2.push_back(S[0][5]);
-	Temp.push_back(mymap1);
-	Temp.push_back(mymap2);
-
-	while (!hashmap1.empty())
-	{
-		multimap<vector<float>, vector<float>>::iterator vit1 = hashmap1.find(mymap2);
-		multimap<vector<float>, vector<float>>::iterator vit2 = hashmap2.find(mymap2);
-
-		if (vit1 != hashmap1.end())//Ã»ÓĞÓÃĞÂµÄmymap2Ñ­»·²éÕÒ
-		{
-			int count2 = 0;
-			mymap1 = (*vit1).first;
-			mymap2.clear();
-			mymap2.push_back((*vit1).second[0]);
-			mymap2.push_back((*vit1).second[1]);
-			mymap2.push_back((*vit1).second[2]);
-			hashmap1.erase(vit1);
-			Temp.push_back(mymap2);
-
-			pair<multimap<vector<float>, vector<float>>::iterator,
-				multimap<vector<float>, vector<float>>::iterator>
-				ps2 = hashmap2.equal_range(mymap2);
-			multimap<vector<float>, vector<float>>::iterator it2 = ps2.first;
-
-			count2 = hashmap2.count(mymap2);
-			if (count2 == 2)
-			{
-				while (it2 != ps2.second)
-				{
-					if (it2->second == mymap1)
-					{
-						hashmap2.erase(it2++);
-					}
-					else
-					{
-						it2++;
-					}
-				}
-			}
-			else
-			{
-				hashmap2.erase(mymap2);
-			}
-		}
-
-		else if (vit2 != hashmap2.end())//Ã»ÓĞÓÃĞÂµÄmymap2Ñ­»·²éÕÒ
-		{
-			int count1 = 0;
-			mymap1 = mymap2;
-			mymap2.clear();
-			//hashmap1.erase(it);½«it´Óhashmap1ÖĞÉ¾³ı£¬ÔòºóĞø²»ÄÜµ÷ÓÃit
-			mymap2.push_back((*vit2).second[0]);
-			mymap2.push_back((*vit2).second[1]);
-			mymap2.push_back((*vit2).second[2]);
-			hashmap2.erase(vit2);
-			Temp.push_back(mymap2);
-
-			pair<multimap<vector<float>, vector<float>>::iterator,
-				multimap<vector<float>, vector<float>>::iterator>
-				ps1 = hashmap1.equal_range(mymap2);
-			multimap<vector<float>, vector<float>>::iterator it1 = ps1.first;
-
-			count1 = hashmap1.count(mymap2);
-			if (count1 == 2)
-			{
-				while (it1 != ps1.second)
-				{
-					if (it1->second == mymap1)
-					{
-						hashmap1.erase(it1++);
-					}
-					else
-					{
-						it1++;
-					}
-				}
-			}
-			else
-			{
-				hashmap1.erase(mymap2);
-			}
-		}
-		else
-		{
-			Temp.push_back(mymap2);
-			multimap<vector<float>, vector<float>>::iterator pit1 = hashmap1.begin();
-			mymap1.clear();
-			mymap2.clear();
-			mymap1.push_back((*pit1).first[0]);
-			mymap1.push_back((*pit1).first[1]);
-			mymap1.push_back((*pit1).first[2]);
-			mymap2.push_back((*pit1).second[0]);
-			mymap2.push_back((*pit1).second[1]);
-			mymap2.push_back((*pit1).second[2]);
-			hashmap1.erase(pit1);
-
-			Temp.push_back(mymap1);
-			Temp.push_back(mymap2);
-		}
-	}
-
-	return contours;
-}
 
 
