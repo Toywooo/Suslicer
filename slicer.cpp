@@ -8,10 +8,10 @@ map<int, vector<vector<float> > > Slicing(Trimesh& m, std::vector<float>& P)
 {
 	vector<vector<float> >temp;
 	vector<vector<float>> s;
-	ofstream myout("C:/Users/wuhua/Desktop/suslicer/一个奇奇怪怪的皮卡丘.txt");
+	ofstream myout("C:/Users/wuhua/Desktop/suslicer/bunny.txt");
 	
 	////输入为三角形列表T（已按zmin排序），平面列表P，层厚度，布尔参数srt
-    //需调用BUILD-TRIANGLE-LISTS函数
+   	 //需调用BUILD-TRIANGLE-LISTS函数
 	//构建有效集合A，并调用COMPUTE-INTERSECTION函数
 	//输出为完成分组的三角形列表S，按zmin及层的z坐标分组
 	map<int, vector<vector<float> > > segs;
@@ -38,23 +38,13 @@ map<int, vector<vector<float> > > Slicing(Trimesh& m, std::vector<float>& P)
 			else
 			{
 				vector<float> seg = ComputeIntersection(fi, P[iLayer], m);
-				S.push_back(seg);
-				s = S;
+				if (seg[2] != 0)
+				{
+					S.push_back(seg);
+				}
 			}
 		}
-		////////////////////////////////////////////////////////////////////////////////
-		/*for (vector<vector<float>>::iterator it = S.begin(); it != S.end(); it++)
-		{
-			//(*it)——容器vector<int>
-			for (vector<float>::iterator vit = (*it).begin(); vit != (*it).end(); vit++)
-			{
-				printf("%f\t", *vit);
-				//cout << "  " << *vit << "  ";
-			}
-		 	cout << endl;
-		}
-		cout << endl;*/
-		//////////////////////////////////////////////////////////////////////////////////
+		
 		//To be optimized: remove faces under the current plane.
 		for (unsigned int i = 0; i < Temp.size(); i++)
 		{
@@ -111,66 +101,110 @@ int binary_searching(vector<float>& P, unsigned int fi, Trimesh& m)
 //https://stackoverflow.com/questions/3142469/determining-the-intersection-of-a-triangle-and-a-plane
 std::vector<float> ComputeIntersection(unsigned int fi, float plane, Trimesh& m)
 {
-	//...
 	std::vector<float> seg(6, 0.0f);
 	std::vector<std::vector<float> > upperVerts, downVerts;
 	const unsigned int* pF = m.F(fi);
-	for (int i = 0; i < 3; i++)
-	{
-		const unsigned int vi = m.F(fi)[i];
-		//  std::vector<float> vert(4,0);       //vert = float[4] x,y,z and z-p
-		//vert[0] = m.V(vi)[0], vert[1] = m.V(vi)[1], vert[2] = m.V(vi)[2]
-		//float dis_to_plane = vert[2] - plane
-		//if dis_to_plane > 0
-		//  verts[3] = dis_to_plane
-		//  upperVerts.push_back(vert);
-		//else
-		//  verts[3] = -dis_to_plane;
-		//  downVerts.push_back(vert);
-		//         
+	const unsigned int vi0 = m.F(fi)[0];
+	vector<float>vert0(3, 0);
+	vert0[0] = m.V(vi0)[0];
+	vert0[1] = m.V(vi0)[1];
+	vert0[2] = m.V(vi0)[2];
+	const unsigned int vi1 = m.F(fi)[1];
+	vector<float>vert1(3, 0);
+	vert1[0] = m.V(vi1)[0];
+	vert1[1] = m.V(vi1)[1];
+	vert1[2] = m.V(vi1)[2];
+	const unsigned int vi2 = m.F(fi)[2];
+	vector<float>vert2(3, 0);
+	vert2[0] = m.V(vi2)[0];
+	vert2[1] = m.V(vi2)[1];
+	vert2[2] = m.V(vi2)[2];
+	float dis_to_plane0 = vert0[2] - plane;
+	float dis_to_plane1 = vert1[2] - plane;
+	float dis_to_plane2 = vert2[2] - plane;
 
-////////////////////////////////////////////////////////////////////////////////////////
-		std::vector<float> vert(4,0);       //vert = float[4] x,y,z and z-p
-		vert[0] = m.V(vi)[0];
-		vert[1] = m.V(vi)[1];
-		vert[2] = m.V(vi)[2];
-		float dis_to_plane = vert[2] - plane;
-		if (dis_to_plane > 0)
+
+	if (dis_to_plane0 != 0 && dis_to_plane1 != 0 && dis_to_plane2 != 0)
+	{
+		if (dis_to_plane0 > 0)
 		{
-			vert[3] = dis_to_plane;
-			upperVerts.push_back(vert);
+			upperVerts.push_back(vert0);
 		}
 		else
 		{
-			vert[3] = -dis_to_plane;
-			downVerts.push_back(vert);
+			downVerts.push_back(vert0);
 		}
-		//////////////////////////////////////////////////////////////////////         
+		if (dis_to_plane1 > 0)
+		{
+			upperVerts.push_back(vert1);
+		}
+		else
+		{
+			downVerts.push_back(vert1);
+		}
+		if (dis_to_plane2 > 0)
+		{
+			upperVerts.push_back(vert2);
+		}
+		else
+		{
+			downVerts.push_back(vert2);
+		}
 	}
+	else if (dis_to_plane0 == 0&& dis_to_plane1 == 0)
+	{
+		seg.clear();
+		seg.push_back(vert0[0]);
+		seg.push_back(vert0[1]);
+		seg.push_back(vert0[2]);
+		seg.push_back(vert1[0]);
+		seg.push_back(vert1[1]);
+		seg.push_back(vert1[2]);
+		return seg;
+	}
+	else if (dis_to_plane1 == 0 && dis_to_plane2 == 0)
+	{
+		seg.clear();
+		seg.push_back(vert1[0]);
+		seg.push_back(vert1[1]);
+		seg.push_back(vert1[2]);
+		seg.push_back(vert2[0]);
+		seg.push_back(vert2[1]);
+		seg.push_back(vert2[2]);
+		return seg;
+	}
+	else if (dis_to_plane0 == 0 && dis_to_plane2 == 0)
+	{
+		seg.clear();
+		seg.push_back(vert0[0]);
+		seg.push_back(vert0[1]);
+		seg.push_back(vert0[2]);
+		seg.push_back(vert2[0]);
+		seg.push_back(vert2[1]);
+		seg.push_back(vert2[2]);
+		return seg;
+	}
+
+
 	int k = 0;
 	for (int i = 0; i < upperVerts.size(); i++)
 	{
 		for (int j = 0; j < downVerts.size(); j++)
 		{
-			//seg[k * 3] = upperVerts[i][0] - downVerts[j][0];
-			//seg[k * 3 + 1] = upperVerts[i][1] - downVerts[j][1];
-			//seg[k * 3 + 2] = upperVerts[i][2] - downVerts[j][2];
-
 			seg[k * 3] = (upperVerts[i][2] - plane) / (upperVerts[i][2] - downVerts[j][2])
 				* (downVerts[j][0] - upperVerts[i][0]) + upperVerts[i][0];
-			seg[k * 3+1] = (upperVerts[i][2] - plane) / (upperVerts[i][2] - downVerts[j][2])
+			seg[k * 3 + 1] = (upperVerts[i][2] - plane) / (upperVerts[i][2] - downVerts[j][2])
 				* (downVerts[j][1] - upperVerts[i][1]) + upperVerts[i][1];
 			seg[k * 3 + 2] = plane;
 			k++;
-			//把vector里的vector的内容取出，放到seg[0][1][2]中 
-			//compute intersection point on upperVerts[i]-downVerts[j] 
-			//seg[k*3] = ?
-			//seg[k*3+1] = ?
-			//seg[k*3+2] = ?
 		}
-		/////////////k++;
 	}
-	return seg;//seg中只存放两个点的坐标，每次调用返回的都是一条线段的两个端点
+	/*for (int i = 0; i < seg.size(); i++)
+	{
+		std::cout << seg[i] << ", ";
+	}
+	std::cout << std::endl;*/
+	return seg;
 }
 
 
